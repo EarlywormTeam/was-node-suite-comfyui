@@ -7919,6 +7919,11 @@ class WAS_Mask_Crop_Region:
 
     def mask_crop_region(self, mask, padding=24, region_type="dominant"):
 
+        print("Original mask shape:", mask.shape)
+        print("After cpu and numpy:", mask.cpu().numpy().shape)
+        print("After squeeze:", mask.cpu().numpy().squeeze().shape)
+        print("After clip and astype:", np.clip(255. * mask.cpu().numpy().squeeze(), 0, 255).astype(np.uint8).shape)
+
         mask_pil = Image.fromarray(np.clip(255. * mask.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
         region_mask, crop_data = self.WT.Masking.crop_region(mask_pil, region_type, padding)
         region_tensor = pil2mask(ImageOps.invert(region_mask)).unsqueeze(0).unsqueeze(1)
